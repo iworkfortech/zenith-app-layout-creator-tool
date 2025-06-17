@@ -1,0 +1,43 @@
+{
+  "floor": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "floorNumber": 1,
+    "building": {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "name": "Building A"
+    },
+    "layoutData": "{\"canvasWidth\":1200,\"canvasHeight\":800,\"version\":\"1.0\",\"elements\":[{\"id\":\"element_1750185287409_0.16950547503625235\",\"type\":\"lift\",\"x\":340,\"y\":123,\"width\":80,\"height\":60,\"rotation\":0,\"label\":\"Lift/Elevator\"},{\"id\":\"element_1750185766908_0.6758876264678315\",\"type\":\"room\",\"x\":573,\"y\":167,\"width\":60,\"height\":40,\"rotation\":0,\"roomNumber\":12,\"roomId\":\"room-1\"},{\"id\":\"element_1750185777141_0.8322395474818405\",\"type\":\"room\",\"x\":587,\"y\":285,\"width\":60,\"height\":40,\"rotation\":0,\"roomNumber\":16,\"roomId\":\"room-5\"}]}"
+  },
+  "rooms": [
+    {
+      "id": "room-1",
+      "roomNumber": 12,
+      "capacity": 4,
+      "status": "AVAILABLE"
+    },
+    {
+      "id": "room-2",
+      "roomNumber": 13,
+      "capacity": 2,
+      "status": "AVAILABLE"
+    },
+    {
+      "id": "room-3",
+      "roomNumber": 14,
+      "capacity": 4,
+      "status": "OCCUPIED"
+    },
+    {
+      "id": "room-4",
+      "roomNumber": 15,
+      "capacity": 3,
+      "status": "AVAILABLE"
+    },
+    {
+      "id": "room-5",
+      "roomNumber": 16,
+      "capacity": 4,
+      "status": "AVAILABLE"
+    }
+  ]
+}
