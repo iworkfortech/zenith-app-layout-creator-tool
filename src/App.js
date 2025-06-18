@@ -56,23 +56,23 @@ function App() {
         <div className="p-4">
 
             <StandaloneLayoutBuilder />
-            <div style={{ width: '100%', height: '500px' }}>
-                <FloorLayoutViewer
-                    layoutData={sampleData}
-                    onChange={(item) => {
-                        setSelectedItem(item);
-                        console.log('Selected:', item);
-                    }}
-                    showGrid={true}
-                    zoomEnabled={true}
-                />
-            </div>
+            {/*<div style={{ width: '100%', height: '500px' }}>*/}
+            {/*    <FloorLayoutViewer*/}
+            {/*        layoutData={sampleData}*/}
+            {/*        onChange={(item) => {*/}
+            {/*            setSelectedItem(item);*/}
+            {/*            console.log('Selected:', item);*/}
+            {/*        }}*/}
+            {/*        showGrid={true}*/}
+            {/*        zoomEnabled={true}*/}
+            {/*    />*/}
+            {/*</div>*/}
 
-            {selectedItem && (
-                <div className="mt-4 p-3 bg-blue-50 rounded">
-                    <strong>Selected:</strong> {JSON.stringify(selectedItem, null, 2)}
-                </div>
-            )}
+            {/*{selectedItem && (*/}
+            {/*    <div className="mt-4 p-3 bg-blue-50 rounded">*/}
+            {/*        <strong>Selected:</strong> {JSON.stringify(selectedItem, null, 2)}*/}
+            {/*    </div>*/}
+            {/*)}*/}
         </div>
     );
   // return (
