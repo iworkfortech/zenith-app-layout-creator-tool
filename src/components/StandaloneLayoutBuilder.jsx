@@ -134,20 +134,21 @@ const JsonInputStep = ({ onNext }) => {
 
     const sampleJson = {
         floor: {
-            id: "550e8400-e29b-41d4-a716-446655440000",
-            floorNumber: 1,
+            id: "692250ce-932e-42bf-bf61-09b47b11545d",
+            floorNumber: 0,
             building: {
-                id: "550e8400-e29b-41d4-a716-446655440001",
-                name: "Building A"
+                id: "2cefcc01-0cc5-4361-bec7-7574bf04546f",
+                name: "Building 1",
+                address: "This is First Building"
             },
-            layoutData: null
+            layoutData: null,
+            images: []
         },
         rooms: [
-            { id: "room-1", roomNumber: 12, capacity: 4, status: "AVAILABLE" },
-            { id: "room-2", roomNumber: 13, capacity: 2, status: "AVAILABLE" },
-            { id: "room-3", roomNumber: 14, capacity: 4, status: "OCCUPIED" },
-            { id: "room-4", roomNumber: 15, capacity: 3, status: "AVAILABLE" },
-            { id: "room-5", roomNumber: 16, capacity: 4, status: "AVAILABLE" }
+            { id: "room-1", roomNumber: 101, capacity: 2, facing: "EAST", status: "AVAILABLE", availableBeds: 1 },
+            { id: "room-2", roomNumber: 102, capacity: 2, facing: "EAST", status: "AVAILABLE", availableBeds: 0 },
+            { id: "room-3", roomNumber: 103, capacity: 2, facing: "EAST", status: "OCCUPIED", availableBeds: 0 },
+            { id: "room-4", roomNumber: 104, capacity: 2, facing: "EAST", status: "VISITING", availableBeds: 1 }
         ]
     };
 
@@ -155,21 +156,35 @@ const JsonInputStep = ({ onNext }) => {
         try {
             const parsed = JSON.parse(jsonInput);
 
+            // Validate structure
             if (!parsed.floor || !parsed.rooms || !Array.isArray(parsed.rooms)) {
                 throw new Error('JSON must contain "floor" object and "rooms" array');
             }
 
-            if (!parsed.floor.floorNumber || !parsed.floor.building?.name) {
-                throw new Error('Floor must have floorNumber and building.name');
+            // Check floor number (can be 0 for ground floor)
+            if (parsed.floor.floorNumber === undefined || parsed.floor.floorNumber === null) {
+                throw new Error('Floor must have a floorNumber (can be 0 for ground floor)');
+            }
+
+            // Check building name
+            if (!parsed.floor.building?.name) {
+                throw new Error('Floor must have building.name');
             }
 
             if (parsed.rooms.length === 0) {
                 throw new Error('Must have at least one room');
             }
 
+            // Validate rooms
             for (const room of parsed.rooms) {
                 if (!room.roomNumber || !room.id) {
                     throw new Error('Each room must have roomNumber and id');
+                }
+
+                // Validate status (should be one of the enum values)
+                const validStatuses = ['AVAILABLE', 'OCCUPIED', 'VISITING'];
+                if (room.status && !validStatuses.includes(room.status)) {
+                    console.warn(`Room ${room.roomNumber} has invalid status: ${room.status}`);
                 }
             }
 
@@ -235,7 +250,7 @@ const JsonInputStep = ({ onNext }) => {
 
                 <div className="mt-6 flex justify-between items-center">
                     <div className="text-sm text-gray-500">
-                        💡 Get this data from your API endpoint
+                        💡 Supports ground floor (floorNumber: 0) and all room statuses
                     </div>
                     <button
                         onClick={validateAndProceed}
@@ -284,45 +299,46 @@ const ExportStep = ({ finalData, onBack, onStartNew }) => {
                         <h2 className="text-2xl font-bold text-gray-900">Layout Created Successfully!</h2>
                     </div>
                     <p className="text-gray-600">
-                        Your floor layout has been created. The JSON below contains the original data with layoutData added.
+                        Your floor layout has been created. Copy the layoutData field and save it to your database.
                     </p>
                 </div>
 
                 <div className="bg-gray-50 rounded-lg p-4 mb-6">
                     <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-medium text-gray-900">Updated JSON (with layoutData)</h3>
+                        <h3 className="font-medium text-gray-900">Layout Data JSON (for database)</h3>
                         <div className="flex gap-2">
                             <button
                                 onClick={copyToClipboard}
                                 className="flex items-center gap-2 text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
                             >
                                 <Copy size={16} />
-                                {copied ? 'Copied!' : 'Copy JSON'}
+                                {copied ? 'Copied!' : 'Copy Layout Data'}
                             </button>
                             <button
                                 onClick={downloadJson}
                                 className="flex items-center gap-2 text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
                             >
                                 <Download size={16} />
-                                Download
+                                Download Full JSON
                             </button>
                         </div>
                     </div>
                     <textarea
-                        value={JSON.stringify(finalData, null, 2)}
+                        value={finalData.floor.layoutData}
                         readOnly
                         className="w-full h-64 p-3 bg-white border border-gray-300 rounded font-mono text-xs"
+                        placeholder="Layout data will appear here..."
                     />
                 </div>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                    <h4 className="font-medium text-blue-900 mb-2">What's Updated:</h4>
-                    <ul className="list-disc list-inside text-sm text-blue-800 space-y-1">
-                        <li>Your original floor and rooms data is preserved</li>
-                        <li><strong>floor.layoutData</strong> has been added with the canvas layout</li>
-                        <li>Copy this JSON and update your database with the new layoutData</li>
-                        <li>Use this data in your FloorLayout.jsx viewer component</li>
-                    </ul>
+                    <h4 className="font-medium text-blue-900 mb-2">Database Update:</h4>
+                    <div className="text-sm text-blue-800 space-y-1">
+                        <p>📋 <strong>Copy the layout data above</strong></p>
+                        <p>💾 <strong>Save to floor.layoutData field</strong> in your database</p>
+                        <p>🎯 <strong>Floor ID:</strong> {finalData.floor.id}</p>
+                        <p>🏢 <strong>Building:</strong> {finalData.floor.building.name} - Floor {finalData.floor.floorNumber}</p>
+                    </div>
                 </div>
 
                 <div className="flex justify-between">
@@ -623,7 +639,19 @@ const StandaloneLayoutBuilder = () => {
                                                                     onClick={() => addElement('room', room)}
                                                                     className="w-full text-left p-2 bg-white border rounded hover:bg-gray-50 transition-colors"
                                                                 >
-                                                                    Room {room.roomNumber} (Capacity: {room.capacity})
+                                                                    <div className="flex justify-between items-center">
+                                                                        <span>Room {room.roomNumber}</span>
+                                                                        <span className={`text-xs px-2 py-1 rounded ${
+                                                                            room.status === 'AVAILABLE' ? 'bg-green-100 text-green-800' :
+                                                                                room.status === 'OCCUPIED' ? 'bg-red-100 text-red-800' :
+                                                                                    'bg-yellow-100 text-yellow-800'
+                                                                        }`}>
+                                                                            {room.status}
+                                                                        </span>
+                                                                    </div>
+                                                                    <div className="text-xs text-gray-500">
+                                                                        Capacity: {room.capacity} | Available beds: {room.availableBeds || 0}
+                                                                    </div>
                                                                 </button>
                                                             ))}
                                                         </div>
