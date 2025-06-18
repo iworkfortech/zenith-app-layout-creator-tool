@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import './App.css';
 import FloorLayoutViewer from "./components/FloorLayoutViewer";
+import StandaloneLayoutBuilder from "./components/StandaloneLayoutBuilder";
 
 function App() {
 
@@ -2101,28 +2102,29 @@ function App() {
                 "availableBeds": 0
             }
         ]
-    };
+    }
 
     return (
         <div className="p-4 h-screen bg-gray-50">
-            <div className="mb-4">
-                <h1 className="text-2xl font-bold">Floor Layout Viewer</h1>
-                <p className="text-gray-600">
-                    Selected Room ID: {selectedRoomId || 'None'}
-                </p>
-            </div>
+            <StandaloneLayoutBuilder/>
+            {/*<div className="mb-4">*/}
+            {/*    <h1 className="text-2xl font-bold">Floor Layout Viewer</h1>*/}
+            {/*    <p className="text-gray-600">*/}
+            {/*        Selected Room ID: {selectedRoomId || 'None'}*/}
+            {/*    </p>*/}
+            {/*</div>*/}
 
-            <div className="h-[600px] lg:h-[700px]">
-                <FloorLayoutViewer
-                    layoutData={sampleData}
-                    onRoomSelect={(roomId) => {
-                        console.log('Room selected:', roomId);
-                        setSelectedRoomId(roomId);
-                    }}
-                    showGrid={true}
-                    zoomEnabled={true}
-                />
-            </div>
+            {/*<div className="h-[600px] lg:h-[700px]">*/}
+            {/*    <FloorLayoutViewer*/}
+            {/*        layoutData={sampleData}*/}
+            {/*        onRoomSelect={(roomId) => {*/}
+            {/*            console.log('Room selected:', roomId);*/}
+            {/*            setSelectedRoomId(roomId);*/}
+            {/*        }}*/}
+            {/*        showGrid={true}*/}
+            {/*        zoomEnabled={true}*/}
+            {/*    />*/}
+            {/*</div>*/}
         </div>
     );
 }
